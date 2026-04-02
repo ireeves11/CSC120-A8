@@ -19,13 +19,12 @@ public class Cafe extends Building{
      * @param cream number of creams in stock
      * @param cups number of cups in stock
      */
-    private Cafe(String name, String address, int nFloors, int coffee, int sugar, int cream, int cups) {
+    public Cafe(String name, String address, int nFloors, int coffee, int sugar, int cream, int cups) {
         super(name,address,nFloors);
         this.nCoffeeOunces = coffee;
         this.nSugarPackets = sugar;
         this.nCreams = cream;
         this.nCups = cups;
-        System.out.println( "You have built a cafe: ☕");
     }
 
     /**
@@ -61,6 +60,57 @@ public class Cafe extends Building{
     }
 
     /**
+     * Overloaded sellCoffee that sells multiple cups of the same order of coffee at a time
+     * @param size number of oz going into each cup of coffee
+     * @param nSugarPackets number of sugar packets going into each coffee
+     * @param nCreams number of creams going into each coffee
+     * @param cups number of cups of coffee being sold
+     */
+    public void sellCoffee(int size, int nSugarPackets, int nCreams, int cups){
+        while(size*cups > this.nCoffeeOunces || nSugarPackets*cups > this.nSugarPackets || nCreams*cups > this.nCreams || cups > this.nCups){
+            this.restock(5,5,5,5);
+        }
+        this.nCoffeeOunces -= size*cups;
+        this.nSugarPackets -= nSugarPackets*cups;
+        this.nCreams -= nCreams*cups;
+        this.nCups -= cups;
+    }
+
+    /**
+     * Sells one 8 oz black coffee, the most basic order you could get
+     */
+    public void sellCoffee(){
+        if(8 > this.nCoffeeOunces || 1 > this.nCups){
+            this.restock(8,0,0,1);
+        }
+        this.nCoffeeOunces -= 8;
+        this.nCups -= 1;
+    }
+
+    @Override
+    public void showOptions() {
+        System.out.println("Available options at " + this.name + ":\n + enter() \n + exit() \n + goUp() \n + goDown()\n + goToFloor(n)\n + sellCoffee()");
+    }
+
+    @Override
+    public void goToFloor(int floorNum) {
+        if (this.activeFloor == -1) {
+            throw new RuntimeException("You are not inside this Building. Must call enter() before navigating between floors.");
+        }
+        if (floorNum < 1 || floorNum > this.nFloors) {
+            throw new RuntimeException("Invalid floor number. Valid range for this Building is 1-" + this.nFloors +".");
+        }
+        if(floorNum > (this.activeFloor+1) || floorNum < (this.activeFloor-1)){
+            throw new RuntimeException("You can only go to adjacent floors");
+        }
+        if(floorNum == this.activeFloor){
+            throw new RuntimeException("You're already on this floor!");
+        }
+        System.out.println("You are now on floor #" + floorNum + " of " + this.name);
+        this.activeFloor = floorNum;
+    }
+
+    /**
      * (for personal testing)
      * returns how much of everything is in stock
      * @return a String detailing the remaining amount of coffee, sugar, cream, and cups
@@ -70,9 +120,12 @@ public class Cafe extends Building{
     }
 
     public static void main(String[] args) {
-        Cafe compass = new Cafe("Compass Cafe", "10 Elm Street, Northampton", 2, 5,5,5,5);
-        compass.sellCoffee(6,1 ,11 );
+        Cafe compass = new Cafe("Compass Cafe", "10 Elm Street, Northampton", 2, 8,5,5,5);
+        compass.sellCoffee();
+        compass.sellCoffee(8,2,2,2);
         System.out.println(compass.getStock());
+        compass.showOptions();
+
     }
     
 }
