@@ -100,8 +100,8 @@ public class Cafe extends Building{
         if (floorNum < 1 || floorNum > this.nFloors) {
             throw new RuntimeException("Invalid floor number. Valid range for this Building is 1-" + this.nFloors +".");
         }
-        if(floorNum > (this.activeFloor+1) || floorNum < (this.activeFloor-1)){
-            throw new RuntimeException("You can only go to adjacent floors");
+        if(floorNum > 1){
+            throw new RuntimeException("You're not allowed on that floor!");
         }
         if(floorNum == this.activeFloor){
             throw new RuntimeException("You're already on this floor!");
@@ -119,12 +119,19 @@ public class Cafe extends Building{
         return this.nCoffeeOunces + " coffees, " + this.nSugarPackets + " sugars, " + this.nCreams + " creams, and " + this.nCups + " cups";
     }
 
+    public String toString(){
+        return (super.toString() + " whose stock is as follows: " + this.getStock());
+    }
+
     public static void main(String[] args) {
         Cafe compass = new Cafe("Compass Cafe", "10 Elm Street, Northampton", 2, 8,5,5,5);
         compass.sellCoffee();
         compass.sellCoffee(8,2,2,2);
         System.out.println(compass.getStock());
         compass.showOptions();
+
+        compass.enter();
+        compass.goToFloor(1);
 
     }
     

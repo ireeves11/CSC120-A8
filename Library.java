@@ -7,7 +7,6 @@ public class Library extends Building{
    * two private attribute
    */
   private Hashtable<String, Boolean> collection;
-  private boolean hasElevator;
 
   /**
    * Library constructor (with compliance to Building)
@@ -16,10 +15,9 @@ public class Library extends Building{
    * @param nFloors int, floors in library (super)
    * @param hasElevator boolean, if the library has an elevator
    */
-  public Library(String name, String address, int nFloors, boolean hasElevator) {
+  public Library(String name, String address, int nFloors) {
     super(name, address, nFloors);
     collection = new Hashtable();
-    this.hasElevator = hasElevator;
   }
 
   /**
@@ -156,9 +154,6 @@ public class Library extends Building{
     if (floorNum < 1 || floorNum > this.nFloors) {
       throw new RuntimeException("Invalid floor number. Valid range for this Building is 1-" + this.nFloors +".");
     }
-    if(!hasElevator && (floorNum > (this.activeFloor+1) || floorNum < (this.activeFloor-1))){
-      throw new RuntimeException("You can only go to adjacent floors without an elevator!");
-    }
     if(floorNum == this.activeFloor){
       throw new RuntimeException("You're already on this floor!");
     }
@@ -168,7 +163,7 @@ public class Library extends Building{
     
     //You gotta test everything man!
     public static void main(String[] args) {
-      Library tml = new Library ("Thomas Memorial Library", "6 Scott Dyer Rd, Cape Elizabeth", 2, true);
+      Library tml = new Library ("Thomas Memorial Library", "6 Scott Dyer Rd, Cape Elizabeth", 3);
       tml.addTitle("Interview with a Vampire");
       tml.addTitle("Priory of the Orange Tree");
       ArrayList<String> books = new ArrayList();
@@ -183,6 +178,9 @@ public class Library extends Building{
         System.out.println(e.getLocalizedMessage());
       }
       //tml.printCollection();
+      tml.enter();
+      tml.goToFloor(3);
+      tml.goToFloor(1);
     }
-  
+    
   }
